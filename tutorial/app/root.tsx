@@ -17,7 +17,14 @@ import {
 
 import appStylesHref from "./app.css?url";
 
-import { getContacts } from "./data";
+// import { getContacts } from "./data";
+
+import { createEmptyContact, getContacts } from "./data";
+
+export const action = async () => {
+  const contact = await createEmptyContact();
+  return json({ contact });
+}
 
 export const loader = async () => {
   const contacts = await getContacts();
@@ -62,7 +69,7 @@ export default function App() {
           </div>
           <nav>
 
-          {contacts.length ? (
+            {contacts.length ? (
               <ul>
                 {contacts.map((contact) => (
                   <li key={contact.id}>
@@ -86,7 +93,7 @@ export default function App() {
                 <i>No contacts</i>
               </p>
             )}
-{/* 
+            {/* 
             <ul>
               <li>
                 <Link to={`/contacts/1`}>Your Name</Link>
