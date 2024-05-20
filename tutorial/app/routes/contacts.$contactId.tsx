@@ -1,17 +1,45 @@
-import { Form } from "@remix-run/react";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 
 import type { ContactRecord } from "../data";
 
+import { getContact } from "../data";
+
+import invariant from "tiny-invariant";
+
+export const loader = async ({
+  params,
+}: LoaderFunctionArgs) => {
+  invariant(params.contactId, "Missing contactId param");  // invariant method thorws an error with a custom message when you anticipated a potential issue with your code.
+  const contact = await getContact(params.contactId);
+  if (!contact) {
+    throw new Response("Not Found", { status: 404 });   // throw new error instead of null if no contact was found
+  }
+  return json({ contact });
+}
+
+// export const loader = async ({ params }) => {
+//   const contact = await getContact(params.contactId);
+//   return json({ contact });
+// };
+
+
 export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placekitten.com/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+
+  const { contact } = useLoaderData<typeof loader>(); // loader now knows of potential nulls 
+
+  // const contact = {
+  //   first: "Your",
+  //   last: "Name",
+  //   avatar: "http://placebacon.net/200/200",
+  //   twitter: "your_handle",
+  //   notes: "Some notes",
+  //   favorite: true,
+  // };
+
+
 
   return (
     <div id="contact">
