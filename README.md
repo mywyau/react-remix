@@ -1,8 +1,4 @@
-# ci-cd 
-
-wip 
-
-to learn github actions
+# react-remix
 
 in the correct directory run:
 
